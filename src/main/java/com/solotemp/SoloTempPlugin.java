@@ -11,10 +11,11 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Tempoross 5-Round-Cooking"
+	name = "Tempoross Solo-5 Guide"
 )
 public class SoloTempPlugin extends Plugin
 {
@@ -23,17 +24,28 @@ public class SoloTempPlugin extends Plugin
 
 	@Inject
 	private SoloTempConfig config;
+	
+	@Inject
+	private SoloTempOverlay overlay;
+	
+	@Inject
+	private OverlayManager overlayManager;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Example started!");
+		//log.info("Example started!");
+		
+		overlayManager.add(overlay);
+		
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		log.info("Example stopped!");
+		//log.info("Example stopped!");
+		
+		overlayManager.remove(overlay);
 	}
 
 	@Subscribe
@@ -41,7 +53,7 @@ public class SoloTempPlugin extends Plugin
 	{
 		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
+			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Plugin.SoloTemp", "Hello World!", null);
 		}
 	}
 
