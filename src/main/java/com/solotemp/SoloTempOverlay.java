@@ -23,13 +23,12 @@ class SoloTempOverlay extends OverlayPanel
 		setPosition(OverlayPosition.TOP_LEFT);
 		this.plugin = plugin;
 		this.config = config;
-		//addMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "Attack style overlay");
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		final String textContent = "Hello world!";
+		final String textContent = plugin.getCurrentGuideStep().getStepText();
 		
 		panelComponent.getChildren().add(TitleComponent.builder()
 				.text(textContent)
