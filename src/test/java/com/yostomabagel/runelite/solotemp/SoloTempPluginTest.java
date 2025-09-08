@@ -1,6 +1,6 @@
-package com.solotemp;
+package com.yostomabagel.runelite.solotemp;
 
-import com.solotemp.SoloTempPlugin;
+import com.yostomabagel.runelite.solotemp.SoloTempPlugin;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;

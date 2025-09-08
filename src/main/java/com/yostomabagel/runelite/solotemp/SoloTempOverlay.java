@@ -1,4 +1,4 @@
-package com.solotemp;
+package com.yostomabagel.runelite.solotemp;
 
 
 import java.awt.Color;
@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.components.TitleComponent;
+import net.runelite.client.ui.overlay.components.LineComponent;
 
 class SoloTempOverlay extends OverlayPanel
 {
@@ -28,16 +28,17 @@ class SoloTempOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		final String textContent = plugin.getCurrentGuideStep().getStepText();
+		int lineWidth = 0;
 		
-		panelComponent.getChildren().add(TitleComponent.builder()
-				.text(textContent)
-				.color(Color.WHITE)
-				.build());
+		for (String textLine : plugin.getCurrentGuideStep().getStepText()) {
+			panelComponent.getChildren().add(LineComponent.builder()
+					.left(textLine)
+					.leftColor(Color.LIGHT_GRAY)
+					.build());
+			lineWidth = Math.max(lineWidth, graphics.getFontMetrics().stringWidth(textLine));
+		}
 
-		panelComponent.setPreferredSize(new Dimension(
-			graphics.getFontMetrics().stringWidth(textContent) + 10,
-			0));
+		panelComponent.setPreferredSize(new Dimension(lineWidth + 10, 0));
 		
 		return super.render(graphics);
 	}

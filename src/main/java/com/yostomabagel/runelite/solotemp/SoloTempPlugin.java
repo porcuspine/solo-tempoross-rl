@@ -1,4 +1,4 @@
-package com.solotemp;
+package com.yostomabagel.runelite.solotemp;
 
 import com.google.inject.Provides;
 
@@ -9,6 +9,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -23,15 +24,14 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class SoloTempPlugin extends Plugin
 {
-	private static final int HARPOONFISHRAW_ID = 25564;
-	private static final int HARPOONFISHCOOKED_ID = 25565;
-	private static final int EMPTYBUCKET_ID = 1925;
-	private static final int WATERBUCKET_ID = 1929;
 	
-	private static final int TEMPO_REG_ID = 12078;
+	private static final int TEMPOROSS_REGION_ID = 12078;
 	
 	private GuideStep guideStep = GuideStep.Inactive;
 	public GuideStep getCurrentGuideStep() {return guideStep;}
+	
+	private ItemContainer playerInv;
+	public ItemContainer getPlayerInv() {return playerInv;}
 	
 	@Inject
 	private Client client;
@@ -65,41 +65,46 @@ public class SoloTempPlugin extends Plugin
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (event.getGameState() == GameState.LOADING) {
-			int[] regionIDs = client.getTopLevelWorldView().getMapRegions();
-			for (int regionID : regionIDs) {
-				if (regionID == TEMPO_REG_ID) {
-					if (guideStep == GuideStep.Inactive) {
-						goToStep(GuideStep.Start);
-					}
-					return;
-				}
-			}
+		if (event.getGameState() != GameState.LOADING) {
 			guideStep = GuideStep.Inactive;
+			return;
 		}
+		
+		if (!(client.getPlayers().size() == 1)) {
+			guideStep = GuideStep.Inactive;
+			return;
+		}
+		
+		boolean isAtTempoross = false;
+		for (int regionID : client.getTopLevelWorldView().getMapRegions()) {
+			if (regionID == TEMPOROSS_REGION_ID) {
+				isAtTempoross = true;
+				break;
+			}
+		}
+		if (!isAtTempoross) {
+			guideStep = GuideStep.Inactive;
+			return;
+		}
+		
+		guideStep = GuideStep.Start;
+		if (guideStep.isStepCompleted(this)) guideStep = guideStep.getNextStep(this);
 	}
 
 	@Subscribe
 	public void onItemContainerChanged(ItemContainerChanged event)
 	{
-		//if (guideStep == GuideStep.Inactive) return;
+		if (guideStep == GuideStep.Inactive) return;
 		
-		ItemContainer inventory = event.getItemContainer();
+		ItemContainer eventInv = event.getItemContainer();
 		
-//		if (inventory == null || inventory.getId() != InventoryID.INVENTORY.getId())
-//			return;
+		if (eventInv == null || eventInv.getId() != InventoryID.INV)
+			return;
 		
-		if (guideStep.isStepFailed()) guideStep = GuideStep.Failed;
-		else if (guideStep.isStepCompleted()) goToStep(guideStep.getNextStep());
+		playerInv = eventInv;
 		
-	}
-	
-	private void goToStep(GuideStep step) 
-	{
-		guideStep = step;
-		while (guideStep != GuideStep.Inactive && guideStep.isStepCompleted()) {
-			guideStep = guideStep.getNextStep();
-		}
+		if (guideStep.isStepFailed(this)) guideStep = GuideStep.Failed;
+		else if (guideStep.isStepCompleted(this)) guideStep = guideStep.getNextStep(this);
 	}
 
 	@Provides
