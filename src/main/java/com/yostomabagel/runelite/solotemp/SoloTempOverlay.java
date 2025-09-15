@@ -1,7 +1,5 @@
 package com.yostomabagel.runelite.solotemp;
 
-import com.yostomabagel.runelite.solotemp.resources.*;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -10,11 +8,8 @@ import java.awt.Rectangle;
 import javax.inject.Inject;
 
 import net.runelite.api.Client;
-import net.runelite.api.Item;
-import net.runelite.api.ItemContainer;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -65,6 +60,11 @@ class SoloTempInventoryOverlay extends Overlay
 	private final SoloTempPlugin plugin;
 	private final SoloTempConfig config;
 	
+	private Color badItemColor = Color.red;
+	private Color dryBucketColor = Color.blue;
+	private Color fishDepositColor = Color.green;
+	private Color fishKeepColor = Color.yellow;
+	
 	@Inject
 	SoloTempInventoryOverlay(ItemManager itemManager, SoloTempPlugin plugin, SoloTempConfig config)
 	{
@@ -83,15 +83,56 @@ class SoloTempInventoryOverlay extends Overlay
 		
 		Widget[] itemWidgets = inventoryWidget.getDynamicChildren();
 		
-		for (int i = 0; i < itemWidgets.length; i++) 
+		int numFish = 0;
+		int numBuckets = 0;
+		int numOthers = 0;
+		
+		for (Widget itemWidget : itemWidgets) 
 		{
-			Widget itemWidget = itemWidgets[i];
-			//Item item = items[i];
 			Rectangle bounds = itemWidget.getBounds();
 			
-			//if (item == null) continue;
+			Color outlineColor = null;
 			
-			graphics.drawImage(itemManager.getItemOutline(itemWidget.getItemId(), itemWidget.getItemQuantity(), Color.red), bounds.x, bounds.y, null);
+			switch (itemWidget.getItemId())
+			{
+			case SoloTempPlugin.HARPOONFISHRAW_ID:
+				break;
+			case SoloTempPlugin.HARPOONFISHCOOKED_ID:
+				if (plugin.getCurrentGuideStep().getFishToDeposit() < 0) break;
+				numFish++;
+				if (numFish <= plugin.getCurrentGuideStep().getFishToDeposit() - plugin.getFishShotCount())
+					//TODO config option for fish to drop
+					outlineColor = fishDepositColor;
+				else
+					//TODO config option for fish to keep
+					outlineColor = fishKeepColor;
+				break;
+			case SoloTempPlugin.BUCKET_ID:
+				//TODO config option for dry bucket reminder
+				outlineColor = dryBucketColor;
+				break;
+			case SoloTempPlugin.WATERBUCKET_ID:
+				//TODO config option for extra items warning
+				if (plugin.getCurrentGuideStep().getDesiredBuckets() < 0) break;
+				numBuckets++;
+				if (numBuckets > plugin.getCurrentGuideStep().getDesiredBuckets())
+					outlineColor = badItemColor;
+				break;
+			default:
+				//TODO config option for extra items warning
+				if (plugin.getCurrentGuideStep().getDesiredOtherItems() < 0) break;
+				numOthers++;
+				if (numOthers > plugin.getCurrentGuideStep().getDesiredOtherItems())
+					outlineColor = badItemColor;
+				break;
+			}
+			
+			if (outlineColor != null)
+			{
+				graphics.drawImage(
+					itemManager.getItemOutline(itemWidget.getItemId(), itemWidget.getItemQuantity(), outlineColor),
+					bounds.x, bounds.y, null);
+			}
 		}
 		
 		return null;

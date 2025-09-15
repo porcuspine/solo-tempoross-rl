@@ -25,12 +25,20 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class SoloTempPlugin extends Plugin
 {
-	private static final int TEMPOROSS_REGION_ID = 12078;
+	public static final int TEMPOROSS_REGION_ID = 12078;
+	public static final int HARPOONFISHRAW_ID = 25564;
+	public static final int HARPOONFISHCOOKED_ID = 25565;
+	public static final int WATERBUCKET_ID = 1929;
+	public static final int BUCKET_ID = 1925;
 	
 	private GuideStep guideStep = GuideStep.Inactive;
 	public GuideStep getCurrentGuideStep() { return guideStep; }
 	
 	public ItemContainer getPlayerInv()  { return client.getItemContainer(InventoryID.INV); }
+	
+	private int prevNumFish = 0;
+	private int fishShotCount = 0;
+	public int getFishShotCount() { return fishShotCount; }
 	
 	@Inject
 	private Client client;
@@ -100,8 +108,16 @@ public class SoloTempPlugin extends Plugin
 		if (eventInv == null || eventInv.getId() != InventoryID.INV)
 			return;
 		
+		if (eventInv.count(HARPOONFISHCOOKED_ID) == prevNumFish - 1) { //TODO only when depositing fish via animation or menu option clicked
+			fishShotCount++;
+		}
+		prevNumFish = eventInv.count(HARPOONFISHCOOKED_ID);
+		
 		if (guideStep.isStepFailed(this)) guideStep = GuideStep.Failed;
-		else if (guideStep.isStepCompleted(this)) guideStep = guideStep.resolveToNextStep(this);
+		else if (guideStep.isStepCompleted(this)) {
+			fishShotCount = 0;
+			guideStep = guideStep.resolveToNextStep(this);
+		}
 	}
 
 	@Provides
