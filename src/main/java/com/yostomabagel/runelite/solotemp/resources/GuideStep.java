@@ -53,6 +53,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 0 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 0);
 		}
@@ -67,6 +68,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 9 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 9);
 		}
@@ -82,6 +84,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 18 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 18);
 		}
@@ -97,6 +100,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 9 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 9);
 		}
@@ -112,6 +116,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 22 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 22);
 		}
@@ -126,6 +131,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 27 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 27);
 		}
@@ -141,6 +147,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 28 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 28);
 		}
@@ -157,6 +164,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has one item and it is a cooked harpoonfish, or has no items
 			return (context.getPlayerInv().count() == 1 && context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 1)
 					|| context.getPlayerInv().count() == 0;
@@ -173,6 +181,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 1 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 1);
 		}
@@ -187,6 +196,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 18 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 18);
 		}
@@ -203,6 +213,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 27 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 27);
 		}
@@ -229,6 +240,7 @@ public enum GuideStep
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 0 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 0);
 		}
@@ -239,10 +251,12 @@ public enum GuideStep
 		{
 			this.stepText = new String[] {
 				"Load EXACTLY 18 harpoonfish, then stop."};
+			this.desiredCookedHarp = 9;
 		}
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 9 cooked harpoonfish
 			return (context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 9);
 		}
@@ -254,10 +268,13 @@ public enum GuideStep
 			this.stepText = new String[] {
 					"Acquire 27 cooked harpoonfish.",
 					"Fish at double spots and cook otherwise."};
+			this.desiredEmptySlots = 0;
+			this.desiredOtherItems = 0;
 		}
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context)
 		{
+			if (context.getPlayerInv() == null) return false;
 			//player has 27 cooked harpoonfish
 			return context.getPlayerInv().count(HARPOONFISHCOOKED_ID) == 27;
 		}
@@ -266,13 +283,16 @@ public enum GuideStep
 	Start(GuideStep.FishOne)
 	{
 		{
-			this.stepText = new String[] {
+			stepText = new String[] {
 					"Grab a bucket and fill it with water.",
 					"You should have 27 free inventory slots."};
-			desiredBuckets = 1;
+			this.desiredBuckets = 1;
+			this.desiredOtherItems = 0;
 		}
 		
-		@Override public boolean isStepCompleted(SoloTempPlugin context) {
+		@Override public boolean isStepCompleted(SoloTempPlugin context)
+		{
+			if (context.getPlayerInv() == null) return false;
 			//player has exactly 27 free slots and a water bucket, or player has a harpoonfish and space for 27 harpoonfish total
 			if (context.getPlayerInv().count() == 1 && context.getPlayerInv().contains(WATERBUCKET_ID))
 				return true;
@@ -289,15 +309,16 @@ public enum GuideStep
 	
 	protected GuideStep nextStep;
 	protected String[] stepText;
-	protected int desiredRawHarp = -1;
 	protected int desiredCookedHarp = -1;
 	protected int desiredBuckets = -1;
 	protected int desiredEmptySlots = -1;
+	protected int desiredOtherItems = -1;
 	
-	public int getDesiredRawHarp() { return desiredRawHarp; }
 	public int getDesiredCookedHarp() { return desiredCookedHarp; }
 	public int getDesiredBuckets() { return desiredBuckets; }
 	public int getDesiredEmptySlots() { return desiredEmptySlots; }
+	public int getDesiredOtherItems() { return desiredOtherItems; }
+	public String[] getStepText() { return stepText; }
 	
 	GuideStep(GuideStep nextStep) { this.nextStep = nextStep; }
 	
@@ -309,8 +330,6 @@ public enum GuideStep
 		if (this.nextStep.isStepCompleted(context)) return this.nextStep.resolveToNextStep(context);
 		else return this.nextStep;
 	}
-	
-	public String[] getStepText() {return stepText;}
 	
 	public abstract boolean isStepCompleted(SoloTempPlugin context);
 	

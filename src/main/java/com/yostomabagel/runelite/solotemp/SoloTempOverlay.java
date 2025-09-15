@@ -1,23 +1,22 @@
 package com.yostomabagel.runelite.solotemp;
-
+import com.yostomabagel.runelite.solotemp.resources.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-
 import javax.inject.Inject;
 
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
-class SoloTempInstructionsOverlay extends OverlayPanel
+class SoloTempOverlay extends OverlayPanel
 {
 	private final SoloTempPlugin plugin;
 	private final SoloTempConfig config;
 
 	@Inject
-	private SoloTempInstructionsOverlay(SoloTempPlugin plugin, SoloTempConfig config)
+	private SoloTempOverlay(SoloTempPlugin plugin, SoloTempConfig config)
 	{
 		super(plugin);
 		setPosition(OverlayPosition.TOP_LEFT);
@@ -28,6 +27,16 @@ class SoloTempInstructionsOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		//TODO config option
+		renderTextboxGuidance(graphics);
+		
+		return super.render(graphics);
+	}
+	
+	public void renderTextboxGuidance(Graphics2D graphics)
+	{
+		panelComponent.getChildren().clear();
+		
 		int lineWidth = 0;
 		
 		for (String textLine : plugin.getCurrentGuideStep().getStepText()) {
@@ -37,9 +46,7 @@ class SoloTempInstructionsOverlay extends OverlayPanel
 					.build());
 			lineWidth = Math.max(lineWidth, graphics.getFontMetrics().stringWidth(textLine));
 		}
-
+	
 		panelComponent.setPreferredSize(new Dimension(lineWidth + 10, 0));
-		
-		return super.render(graphics);
 	}
 }

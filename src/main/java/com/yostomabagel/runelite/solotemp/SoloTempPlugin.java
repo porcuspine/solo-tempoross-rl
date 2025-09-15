@@ -1,7 +1,7 @@
 package com.yostomabagel.runelite.solotemp;
+import com.yostomabagel.runelite.solotemp.resources.*;
 
 import com.google.inject.Provides;
-import com.yostomabagel.runelite.solotemp.resources.GuideStep;
 
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +25,15 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class SoloTempPlugin extends Plugin
 {
-	
 	private static final int TEMPOROSS_REGION_ID = 12078;
 	
 	private GuideStep guideStep = GuideStep.Inactive;
 	public GuideStep getCurrentGuideStep() {return guideStep;}
 	
-	private ItemContainer playerInv;
-	public ItemContainer getPlayerInv() {return playerInv;}
+	public ItemContainer getPlayerInv() 
+	{
+		return client.getItemContainer(InventoryID.INV);
+	}
 	
 	@Inject
 	private Client client;
@@ -41,35 +42,30 @@ public class SoloTempPlugin extends Plugin
 	private SoloTempConfig config;
 	
 	@Inject
-	private SoloTempInstructionsOverlay overlay;
+	private SoloTempOverlay overlay;
 	
 	@Inject
 	private OverlayManager overlayManager;
 
 	@Override
 	protected void startUp() throws Exception
-	{
-		//log.info("Example started!");
-		
+	{		
 		overlayManager.add(overlay);
-		
 	}
 
 	@Override
 	protected void shutDown() throws Exception
-	{
-		//log.info("Example stopped!");
-		
+	{		
 		overlayManager.remove(overlay);
 	}
 	
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (event.getGameState() != GameState.LOADING) {
-			guideStep = GuideStep.Inactive;
-			return;
-		}
+//		if (event.getGameState() != GameState.LOADING) {
+//			guideStep = GuideStep.Inactive;
+//			return;
+//		}
 		
 		if (!(client.getPlayers().size() == 1)) {
 			guideStep = GuideStep.Inactive;
@@ -88,7 +84,7 @@ public class SoloTempPlugin extends Plugin
 			return;
 		}
 		
-		guideStep = GuideStep.Start;
+	 	guideStep = GuideStep.Start;
 		if (guideStep.isStepCompleted(this)) guideStep = guideStep.resolveToNextStep(this);
 	}
 
@@ -101,8 +97,6 @@ public class SoloTempPlugin extends Plugin
 		
 		if (eventInv == null || eventInv.getId() != InventoryID.INV)
 			return;
-		
-		playerInv = eventInv;
 		
 		if (guideStep.isStepFailed(this)) guideStep = GuideStep.Failed;
 		else if (guideStep.isStepCompleted(this)) guideStep = guideStep.resolveToNextStep(this);
