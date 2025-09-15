@@ -40,7 +40,7 @@ public class SoloTempPlugin extends Plugin
 	private SoloTempConfig config;
 	
 	@Inject
-	private SoloTempOverlay overlay;
+	private SoloTempInstructionsOverlay overlay;
 	
 	@Inject
 	private OverlayManager overlayManager;

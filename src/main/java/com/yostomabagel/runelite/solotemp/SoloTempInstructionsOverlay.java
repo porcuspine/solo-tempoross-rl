@@ -11,13 +11,13 @@ import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
-class SoloTempOverlay extends OverlayPanel
+class SoloTempInstructionsOverlay extends OverlayPanel
 {
 	private final SoloTempPlugin plugin;
 	private final SoloTempConfig config;
 
 	@Inject
-	private SoloTempOverlay(SoloTempPlugin plugin, SoloTempConfig config)
+	private SoloTempInstructionsOverlay(SoloTempPlugin plugin, SoloTempConfig config)
 	{
 		super(plugin);
 		setPosition(OverlayPosition.TOP_LEFT);
