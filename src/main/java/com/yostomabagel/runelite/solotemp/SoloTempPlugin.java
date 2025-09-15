@@ -1,6 +1,7 @@
 package com.yostomabagel.runelite.solotemp;
 
 import com.google.inject.Provides;
+import com.yostomabagel.runelite.solotemp.resources.GuideStep;
 
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;

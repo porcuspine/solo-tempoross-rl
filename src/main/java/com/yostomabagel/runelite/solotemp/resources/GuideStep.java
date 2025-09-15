@@ -1,4 +1,6 @@
-package com.yostomabagel.runelite.solotemp;
+package com.yostomabagel.runelite.solotemp.resources;
+
+import com.yostomabagel.runelite.solotemp.SoloTempPlugin;
 
 public enum GuideStep
 {
