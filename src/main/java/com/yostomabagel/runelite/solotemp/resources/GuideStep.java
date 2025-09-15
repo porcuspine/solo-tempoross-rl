@@ -269,7 +269,7 @@ public enum GuideStep
 			this.stepText = new String[] {
 					"Grab a bucket and fill it with water.",
 					"You should have 27 free inventory slots."};
-			this.desiredEmptySlots = 27;
+			desiredBuckets = 1;
 		}
 		
 		@Override public boolean isStepCompleted(SoloTempPlugin context) {
@@ -291,8 +291,13 @@ public enum GuideStep
 	protected String[] stepText;
 	protected int desiredRawHarp = -1;
 	protected int desiredCookedHarp = -1;
-	protected int desiredOtherItems = -1;
+	protected int desiredBuckets = -1;
 	protected int desiredEmptySlots = -1;
+	
+	public int getDesiredRawHarp() { return desiredRawHarp; }
+	public int getDesiredCookedHarp() { return desiredCookedHarp; }
+	public int getDesiredBuckets() { return desiredBuckets; }
+	public int getDesiredEmptySlots() { return desiredEmptySlots; }
 	
 	GuideStep(GuideStep nextStep) { this.nextStep = nextStep; }
 	
