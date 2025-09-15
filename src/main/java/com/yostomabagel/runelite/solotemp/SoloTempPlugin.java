@@ -88,7 +88,7 @@ public class SoloTempPlugin extends Plugin
 		}
 		
 		guideStep = GuideStep.Start;
-		if (guideStep.isStepCompleted(this)) guideStep = guideStep.getNextStep(this);
+		if (guideStep.isStepCompleted(this)) guideStep = guideStep.resolveToNextStep(this);
 	}
 
 	@Subscribe
@@ -104,7 +104,7 @@ public class SoloTempPlugin extends Plugin
 		playerInv = eventInv;
 		
 		if (guideStep.isStepFailed(this)) guideStep = GuideStep.Failed;
-		else if (guideStep.isStepCompleted(this)) guideStep = guideStep.getNextStep(this);
+		else if (guideStep.isStepCompleted(this)) guideStep = guideStep.resolveToNextStep(this);
 	}
 
 	@Provides

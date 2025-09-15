@@ -239,12 +239,12 @@ public enum GuideStep
 		this.stepText = stepText;
 	}
 	
-	public GuideStep getNextStep(SoloTempPlugin context) { return getNextStep(context, true); }
+	public GuideStep resolveToNextStep(SoloTempPlugin context) { return resolveToNextStep(context, true); }
 	
-	public GuideStep getNextStep(SoloTempPlugin context, boolean doCheckCompletion) {
+	public GuideStep resolveToNextStep(SoloTempPlugin context, boolean doCheckCompletion) {
 		if (!doCheckCompletion) return this.nextStep;
 		if (this.nextStep == GuideStep.Inactive) return this.nextStep;
-		if (this.nextStep.isStepCompleted(context)) return this.nextStep.getNextStep(context);
+		if (this.nextStep.isStepCompleted(context)) return this.nextStep.resolveToNextStep(context);
 		else return this.nextStep;
 	}
 	
