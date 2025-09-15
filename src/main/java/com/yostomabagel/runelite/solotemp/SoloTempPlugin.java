@@ -1,8 +1,8 @@
 package com.yostomabagel.runelite.solotemp;
+
 import com.yostomabagel.runelite.solotemp.resources.*;
 
 import com.google.inject.Provides;
-
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -28,12 +28,9 @@ public class SoloTempPlugin extends Plugin
 	private static final int TEMPOROSS_REGION_ID = 12078;
 	
 	private GuideStep guideStep = GuideStep.Inactive;
-	public GuideStep getCurrentGuideStep() {return guideStep;}
+	public GuideStep getCurrentGuideStep() { return guideStep; }
 	
-	public ItemContainer getPlayerInv() 
-	{
-		return client.getItemContainer(InventoryID.INV);
-	}
+	public ItemContainer getPlayerInv()  { return client.getItemContainer(InventoryID.INV); }
 	
 	@Inject
 	private Client client;
@@ -42,7 +39,10 @@ public class SoloTempPlugin extends Plugin
 	private SoloTempConfig config;
 	
 	@Inject
-	private SoloTempOverlay overlay;
+	private SoloTempTextOverlay textOverlay;
+	
+	@Inject
+	private SoloTempInventoryOverlay inventoryOverlay;
 	
 	@Inject
 	private OverlayManager overlayManager;
@@ -50,13 +50,15 @@ public class SoloTempPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{		
-		overlayManager.add(overlay);
+		overlayManager.add(textOverlay);
+		overlayManager.add(inventoryOverlay);
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{		
-		overlayManager.remove(overlay);
+		overlayManager.remove(textOverlay);
+		overlayManager.remove(inventoryOverlay);
 	}
 	
 	@Subscribe
